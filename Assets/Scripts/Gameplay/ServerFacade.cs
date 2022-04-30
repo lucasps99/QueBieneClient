@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Networking;
-using UnityEngine;
+using UnityEngine;  
 
 public class ServerFacade : MonoBehaviour
 {
@@ -54,8 +54,10 @@ public class ServerFacade : MonoBehaviour
     {
         public bool isgameready { get; set; }
         public long timestamp = 30;
-        public List<BieneInfo> bienes { get; set; }
+        //public BieneInfo[] bienes { get; set; }
+        public BieneInfo[] bienes { get; set; }
     }
+
     public IEnumerator CanStartGame(Action<ActionResult, StartGameInfo> i_callback)
     {
         UnityWebRequest request = UnityWebRequest.Get(m_baseURL + m_game);
@@ -73,7 +75,7 @@ public class ServerFacade : MonoBehaviour
             Debug.Log(text);
             StartGameInfo result = JsonUtility.FromJson<StartGameInfo>(text);
 
-            i_callback(ActionResult.Success, result);
+            i_callback(ActionResult.Success, new StartGameInfo());
         }
     }
 
