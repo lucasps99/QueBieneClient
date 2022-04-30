@@ -9,6 +9,7 @@ public class MashMoleDelegate : MonoBehaviour
 {
     ServerFacade m_serverFacade;
     ServerFacade.StartGameInfo m_bieneInfo = null;
+    ServerFacade.Bienes m_bienes = null;
     bool m_initialized = false;
     int m_currentBiene = 0;
     float m_moleTimeLeft = 0;
@@ -36,6 +37,8 @@ public class MashMoleDelegate : MonoBehaviour
     [SerializeField] GameObject m_winText;
     [SerializeField] GameObject m_loseText;
     [SerializeField] GameObject m_drawText;
+
+    float m_requestStateTimeLeft = 0.3f;
 
     public void Start()
     {
@@ -68,13 +71,15 @@ public class MashMoleDelegate : MonoBehaviour
         m_loseText.SetActive(false);
         m_greyScreen.SetActive(false);
         m_bieneInfo = null;
+        m_bienes = null;
         m_initialized = false;
     }
 
-    public void SetGameInfo(ServerFacade.StartGameInfo i_bieneInfo)
+    public void SetGameInfo(ServerFacade.StartGameInfo i_bieneInfo, ServerFacade.Bienes i_bienes)
     {
         m_greyScreen.SetActive(false);
         m_bieneInfo = i_bieneInfo;
+        m_bienes = i_bienes;
         m_startTime = new DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc).AddMilliseconds(m_bieneInfo.timestamp);
         m_initialized = true;
     }
@@ -85,13 +90,13 @@ public class MashMoleDelegate : MonoBehaviour
         {
             return;
         }
-        else if (DateTime.Now > m_startTime && !m_isMoleActive)
+        else if (DateTime.Now > m_startTime && m_bieneInfo.isgameready && !m_isMoleActive)
         {
             TimeSpan timeElapsed = DateTime.Now - m_startTime;
-            if(timeElapsed.Seconds > m_bieneInfo.bienes[m_currentBiene].delta)
+            if(timeElapsed.Seconds > m_bienes.bienes[m_currentBiene].delta)
             {
                 m_moleTimeLeft = m_moleTimeInSeconds;
-                ButtonImage currentButton = m_buttons[m_bieneInfo.bienes[m_currentBiene].position];
+                ButtonImage currentButton = m_buttons[m_bienes.bienes[m_currentBiene].position];
                 currentButton.moleImage.enabled = true;
                 currentButton.button.onClick.AddListener(OnCurrentBienePressed);
                 m_isMoleActive = true;
@@ -103,22 +108,30 @@ public class MashMoleDelegate : MonoBehaviour
             if (m_moleTimeLeft <= 0)
             {
                 m_isMoleActive = false;
-                //Get state;
+                m_requestStateTimeLeft = 0.3f;
                 m_currentBiene += 1;
-                if (m_currentBiene >= m_bieneInfo.bienes.Length)
+                if (m_currentBiene >= m_bienes.bienes.Length)
                 {
                     OnGameEnded();
                 }
+            }
+        }
+        if (m_requestStateTimeLeft >= 0)
+        {
+            m_requestStateTimeLeft -= Time.deltaTime;
+            if (m_requestStateTimeLeft <= 0)
+            {
+                StartCoroutine(m_serverFacade.GetCurrentState(ResetUserData));
             }
         }
     }
 
     public void OnCurrentBienePressed()
     {
-        ButtonImage currentButton = m_buttons[m_bieneInfo.bienes[m_currentBiene].position];
+        ButtonImage currentButton = m_buttons[m_bienes.bienes[m_currentBiene].position];
         currentButton.button.onClick.RemoveListener(OnCurrentBienePressed);
         currentButton.moleImage.enabled = false;
-        StartCoroutine(m_serverFacade.OnBienePressed(m_bieneInfo.bienes[m_currentBiene].bieneId, OnBienePressedCallback));
+        StartCoroutine(m_serverFacade.OnBienePressed(m_bienes.bienes[m_currentBiene].bieneId, OnBienePressedCallback));
         m_isMoleActive = false;
     }
 
@@ -134,7 +147,7 @@ public class MashMoleDelegate : MonoBehaviour
         }
         m_scoreText.SetText($"{m_playerScore} - {m_rivalScore}");
         m_currentBiene += 1;
-        if (m_currentBiene >= m_bieneInfo.bienes.Length)
+        if (m_currentBiene >= m_bienes.bienes.Length)
         {
             OnGameEnded();
         }
@@ -166,5 +179,10 @@ public class MashMoleDelegate : MonoBehaviour
         m_greyScreen.SetActive(true);
     }
 
-
+    void ResetUserData(ServerFacade.ActionResult i_actionResult, ServerFacade.GetState i_response)
+    {
+        m_playerScore = i_response.userPoints;
+        m_rivalScore = i_response.rivalPoints;
+        m_scoreText.SetText($"{m_playerScore} - {m_rivalScore}");
+    }
 }

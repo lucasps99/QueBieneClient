@@ -55,7 +55,7 @@ public class GameManager : MonoBehaviour
         if (i_result == ServerFacade.ActionResult.Success)
         {
             m_state = State.GameplayPhase;
-            m_mashMoleDelegate.SetGameInfo(i_startGameInfo);
+            StartCoroutine(m_serverFacade.GetBienes((i_result, i_bienes) => { m_mashMoleDelegate.SetGameInfo(i_startGameInfo, i_bienes); }));
         }
         else
         {
