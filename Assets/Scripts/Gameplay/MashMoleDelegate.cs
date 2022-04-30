@@ -90,7 +90,7 @@ public class MashMoleDelegate : MonoBehaviour
         {
             return;
         }
-        else if (DateTime.Now > m_startTime && m_bieneInfo.isgameready && !m_isMoleActive)
+        else if (DateTime.Now > m_startTime && m_bieneInfo.isgameready && !m_isMoleActive && m_currentBiene < m_bienes.bienes.Length)
         {
             TimeSpan timeElapsed = DateTime.Now - m_startTime;
             if(timeElapsed.Seconds > m_bienes.bienes[m_currentBiene].delta)
@@ -135,10 +135,10 @@ public class MashMoleDelegate : MonoBehaviour
     {
         Debug.Log($"CURRENT BIENE PRESSED biene with id {m_bienes.bienes[m_currentBiene].bieneId}");
         ButtonImage currentButton = m_buttons[m_bienes.bienes[m_currentBiene].position];
-        m_currentBiene += 1;
         currentButton.moleImage.enabled = false;
         m_isMoleActive = false;
         StartCoroutine(m_serverFacade.OnBienePressed(m_bienes.bienes[m_currentBiene].bieneId, OnBienePressedCallback));
+        m_currentBiene += 1;
         currentButton.button.onClick.RemoveListener(OnCurrentBienePressed);
     }
 

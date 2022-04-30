@@ -127,10 +127,14 @@ public class ServerFacade : MonoBehaviour
 
     public IEnumerator OnBienePressed(uint i_bieneId, Action<ActionResult, OnBienePressedResponse> i_callback)
     {
-        WWWForm form = new WWWForm();
-        form.AddField("bieneId", i_bieneId.ToString());
-        UnityWebRequest request = UnityWebRequest.Post(m_baseURL + m_biene, form);
+        //WWWForm form = new WWWForm();
+        //form.AddField("bieneId", i_bieneId.ToString());
+        UnityWebRequest request = UnityWebRequest.Get(m_baseURL + m_biene + "/press");
         request = SetupHeaders(request);
+        request.SetRequestHeader("bieneId", i_bieneId.ToString());
+        //request.uploadHandler.contentType = "application/json";
+        Debug.Log($"Room id is {request.GetRequestHeader("roomId")}");
+        Debug.Log($"UserId id is {request.GetRequestHeader("userId")}");
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.ConnectionError)
@@ -140,7 +144,6 @@ public class ServerFacade : MonoBehaviour
         }
         else
         {
-
             string text = request.downloadHandler.text;
             Debug.Log(text);
             OnBienePressedResponse result = JsonUtility.FromJson<OnBienePressedResponse>(text);
