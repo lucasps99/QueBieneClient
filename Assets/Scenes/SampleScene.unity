@@ -2425,3 +2425,84 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1963784120}
   m_CullTransparentMesh: 1
+--- !u!1 &2000072808
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2000072810}
+  - component: {fileID: 2000072811}
+  - component: {fileID: 2000072809}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2000072809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2000072808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb440c29e1cbb86429a80efffd24cb6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onGameEnded:
+    m_PersistentCalls:
+      m_Calls: []
+  m_buttons:
+  - button: {fileID: 476742140}
+    moleImage: {fileID: 1381252493}
+  - button: {fileID: 1022746807}
+    moleImage: {fileID: 180855396}
+  - button: {fileID: 1756455471}
+    moleImage: {fileID: 97114030}
+  - button: {fileID: 384462123}
+    moleImage: {fileID: 719293008}
+  - button: {fileID: 1345284071}
+    moleImage: {fileID: 1264164222}
+  - button: {fileID: 1963784122}
+    moleImage: {fileID: 1758840132}
+  - button: {fileID: 340925660}
+    moleImage: {fileID: 1037538408}
+  - button: {fileID: 344622917}
+    moleImage: {fileID: 170892146}
+  - button: {fileID: 1686418220}
+    moleImage: {fileID: 1447942344}
+  m_score: {fileID: 861923414}
+  m_moleTimeInSeconds: 0
+--- !u!4 &2000072810
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2000072808}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 341.97433, y: 225.8716, z: -36.350628}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2000072811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2000072808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7943906dcad7d664c8054629158497a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_mashMoleDelegate: {fileID: 2000072809}
