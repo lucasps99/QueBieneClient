@@ -36,6 +36,12 @@ public class ServerFacade : MonoBehaviour
         return i_request;
     }
 
+    [Serializable]
+    public class JoinRoomResult
+    {
+        public string roomId;
+    }
+
     public IEnumerator JoinRoom(Action<ActionResult> i_callback)
     {
         UnityWebRequest request = UnityWebRequest.Post(m_baseURL + m_game, new WWWForm());
@@ -50,7 +56,10 @@ public class ServerFacade : MonoBehaviour
         else
         {
             // Show results as text
-            Debug.Log("Logged in");
+            string text = request.downloadHandler.text;
+            JoinRoomResult result = JsonUtility.FromJson<JoinRoomResult>(text);
+            Debug.Log($"Logged in room {result.roomId}");
+            m_roomId = result.roomId;
             i_callback(ActionResult.Success);
         }
     }
@@ -59,7 +68,6 @@ public class ServerFacade : MonoBehaviour
     {
         public bool isgameready;
         public long timestamp;
-        public string roomId;
     }
 
     public IEnumerator CanStartGame(Action<ActionResult, StartGameInfo> i_callback)
@@ -78,12 +86,8 @@ public class ServerFacade : MonoBehaviour
             string text = request.downloadHandler.text;
             Debug.Log(text);
             StartGameInfo result = JsonUtility.FromJson<StartGameInfo>(text);
-            if (result.isgameready)
-            {
-                m_roomId = result.roomId;
-            }
 
-            i_callback(ActionResult.Success, new StartGameInfo());
+            i_callback(ActionResult.Success, result);
         }
     }
 
@@ -105,7 +109,6 @@ public class ServerFacade : MonoBehaviour
         }
         else
         {
-
             string text = request.downloadHandler.text;
             Debug.Log(text);
             Bienes result = JsonUtility.FromJson<Bienes>(text);

@@ -95,6 +95,7 @@ public class MashMoleDelegate : MonoBehaviour
             TimeSpan timeElapsed = DateTime.Now - m_startTime;
             if(timeElapsed.Seconds > m_bienes.bienes[m_currentBiene].delta)
             {
+                Debug.Log($"NEW biene with id {m_bienes.bienes[m_currentBiene].bieneId}, at position {m_bienes.bienes[m_currentBiene].position}");
                 m_moleTimeLeft = m_moleTimeInSeconds;
                 ButtonImage currentButton = m_buttons[m_bienes.bienes[m_currentBiene].position];
                 currentButton.moleImage.enabled = true;
@@ -109,6 +110,10 @@ public class MashMoleDelegate : MonoBehaviour
             {
                 m_isMoleActive = false;
                 m_requestStateTimeLeft = 0.3f;
+                ButtonImage currentButton = m_buttons[m_bienes.bienes[m_currentBiene].position];
+                currentButton.moleImage.enabled = false;
+                currentButton.button.onClick.RemoveListener(OnCurrentBienePressed);
+                Debug.Log($"EXPIRED biene with id {m_bienes.bienes[m_currentBiene].bieneId}");
                 m_currentBiene += 1;
                 if (m_currentBiene >= m_bienes.bienes.Length)
                 {
@@ -128,11 +133,13 @@ public class MashMoleDelegate : MonoBehaviour
 
     public void OnCurrentBienePressed()
     {
+        Debug.Log($"CURRENT BIENE PRESSED biene with id {m_bienes.bienes[m_currentBiene].bieneId}");
         ButtonImage currentButton = m_buttons[m_bienes.bienes[m_currentBiene].position];
-        currentButton.button.onClick.RemoveListener(OnCurrentBienePressed);
+        m_currentBiene += 1;
         currentButton.moleImage.enabled = false;
-        StartCoroutine(m_serverFacade.OnBienePressed(m_bienes.bienes[m_currentBiene].bieneId, OnBienePressedCallback));
         m_isMoleActive = false;
+        StartCoroutine(m_serverFacade.OnBienePressed(m_bienes.bienes[m_currentBiene].bieneId, OnBienePressedCallback));
+        currentButton.button.onClick.RemoveListener(OnCurrentBienePressed);
     }
 
     public void OnBienePressedCallback(ServerFacade.ActionResult i_result, ServerFacade.OnBienePressedResponse i_response)
@@ -146,7 +153,6 @@ public class MashMoleDelegate : MonoBehaviour
             m_rivalScore += 1;
         }
         m_scoreText.SetText($"{m_playerScore} - {m_rivalScore}");
-        m_currentBiene += 1;
         if (m_currentBiene >= m_bienes.bienes.Length)
         {
             OnGameEnded();

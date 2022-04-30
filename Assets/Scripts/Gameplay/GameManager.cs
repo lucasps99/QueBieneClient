@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(m_serverFacade.JoinRoom(OnRoomJoined));
         m_state = State.Logging;
         m_mashMoleDelegate.Initialize(m_serverFacade);
+        m_mashMoleDelegate.Reset();
     }
 
     void Update()
@@ -52,7 +53,7 @@ public class GameManager : MonoBehaviour
 
     void OnCanStartGame(ServerFacade.ActionResult i_result, ServerFacade.StartGameInfo i_startGameInfo)
     {
-        if (i_result == ServerFacade.ActionResult.Success)
+        if (i_result == ServerFacade.ActionResult.Success && i_startGameInfo.isgameready)
         {
             m_state = State.GameplayPhase;
             StartCoroutine(m_serverFacade.GetBienes((i_result, i_bienes) => { m_mashMoleDelegate.SetGameInfo(i_startGameInfo, i_bienes); }));
