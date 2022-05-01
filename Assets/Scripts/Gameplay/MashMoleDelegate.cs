@@ -14,7 +14,9 @@ public class MashMoleDelegate : MonoBehaviour
     int m_currentBiene = 0;
     float m_moleTimeLeft = 0;
     bool m_isMoleActive = false;
-    DateTime m_startTime;
+    long m_startTime;
+    long m_serverTime;
+    float m_serverDelta;
 
     public UnityEvent onGameEnded;
 
@@ -53,6 +55,7 @@ public class MashMoleDelegate : MonoBehaviour
     public void Initialize(ServerFacade i_serverFacade)
     {
         m_serverFacade = i_serverFacade;
+        StartCoroutine(m_serverFacade.GetServerTimestamp(SetTimestamp));
     }
 
     public void Reset()
@@ -74,7 +77,7 @@ public class MashMoleDelegate : MonoBehaviour
         m_greyScreen.SetActive(false);
         m_bieneInfo = i_bieneInfo;
         m_bienes = i_bienes;
-        m_startTime = new DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc).AddMilliseconds(m_bieneInfo.timestamp);
+        m_startTime = m_bieneInfo.timestamp;
         //Debug.Log($"---------------------------");
         //Debug.Log($"Start time is {m_startTime}");
         //Debug.Log($"---------------------------");
@@ -83,14 +86,16 @@ public class MashMoleDelegate : MonoBehaviour
 
     public void Update()
     {
+        m_serverDelta += Time.deltaTime;
+        long currentServerTime = m_serverTime + (long)(m_serverDelta*1000);
         if (!m_initialized)
         {
             return;
         }
-        else if (DateTime.Now > m_startTime && m_bieneInfo.isgameready && !m_isMoleActive && m_currentBiene < m_bienes.bienes.Length)
+        else if (currentServerTime > m_startTime && m_bieneInfo.isgameready && !m_isMoleActive && m_currentBiene < m_bienes.bienes.Length)
         {
-            TimeSpan timeElapsed = DateTime.Now - m_startTime;
-            if(timeElapsed.Seconds > m_bienes.bienes[m_currentBiene].delta)
+            long timeElapsed = currentServerTime - m_startTime;
+            if(timeElapsed > (m_bienes.bienes[m_currentBiene].delta * 1000))
             {
                 //Debug.Log($"NEW biene with id {m_bienes.bienes[m_currentBiene].bieneId}, at position {m_bienes.bienes[m_currentBiene].position}");
                 m_moleTimeLeft = m_moleTimeInSeconds;
@@ -187,5 +192,11 @@ public class MashMoleDelegate : MonoBehaviour
         m_playerScore = i_response.userPoints;
         m_rivalScore = i_response.rivalPoints;
         m_scoreText.SetText($"{m_playerScore} - {m_rivalScore}");
+    }
+
+    void SetTimestamp(ServerFacade.ActionResult i_actionResult, long i_timestamp)
+    {
+        m_serverTime = i_timestamp;
+        m_serverDelta = 0;
     }
 }

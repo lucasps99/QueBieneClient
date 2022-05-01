@@ -205,4 +205,45 @@ public class ServerFacade : MonoBehaviour
             i_callback(ActionResult.Success, result);
         }
     }
+
+    public class ServerClock
+    {
+        public long timestamp;
+        public long delta;
+    }
+
+    public IEnumerator GetServerTimestamp(Action<ActionResult, long> i_callback)
+    {
+        UnityWebRequest request = UnityWebRequest.Get(m_baseURL + "clock");
+        request = SetupHeaders(request);
+        System.DateTime epochStart = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
+        long clientTimestamp = (long)(System.DateTime.UtcNow - epochStart).TotalMilliseconds;
+        request.SetRequestHeader("start", clientTimestamp.ToString());
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.ConnectionError)
+        {
+            //Debug.Log(request.error);
+            i_callback(ActionResult.Error, 0);
+        }
+        else
+        {
+            string text = request.downloadHandler.text;
+            //Debug.Log(text);
+            ServerClock result = JsonUtility.FromJson<ServerClock>(text);
+
+            System.DateTime epochStart2 = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
+            long nowTimeStamp = (long)(System.DateTime.UtcNow - epochStart).TotalMilliseconds;
+            long serverTimestamp = result.timestamp;
+            long serverClientRequestDiffTime = result.delta;
+            long serverClientResponseDiffTime = nowTimeStamp - serverTimestamp;
+            long halfRoundTrip = (serverClientRequestDiffTime + serverClientResponseDiffTime) / 2;
+
+            long syncedServerTime = serverTimestamp + halfRoundTrip;
+            i_callback(ActionResult.Success, syncedServerTime);
+        }
+    }
+
+
+
 }
