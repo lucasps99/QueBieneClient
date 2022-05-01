@@ -500,25 +500,18 @@ RectTransform:
   m_AnchoredPosition: {x: -1.0987933, y: -31.354311}
   m_SizeDelta: {x: 330, y: 330}
   m_Pivot: {x: 0.5, y: 0.4}
---- !u!95 &186508107
-Animator:
-  serializedVersion: 3
+--- !u!114 &186508107
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 186508105}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 137f1d2b70129fb4bb586214a9e563c2, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5909b96d13c2ffc4a94ba8c40aaf0a36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &186508108
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3008,7 +3001,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_panel: {fileID: 2002801130}
-  m_loadingAnimator: {fileID: 186508107}
+  m_loadingAnimator: {fileID: 186508105}
   m_mashMoleDelegate: {fileID: 2000072809}
 --- !u!1 &2002801130
 GameObject:

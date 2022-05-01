@@ -47,13 +47,7 @@ public class MashMoleDelegate : MonoBehaviour
             button.moleImage.enabled = false;
         }
         m_scoreText = m_score.GetComponent<TextMeshProUGUI>();
-        Debug.Assert(m_scoreText != null, "Score text is null");
-        TextMeshProUGUI winText = m_winText.GetComponent<TextMeshProUGUI>();
-        winText.color = new Color(0f, 1f, 0f);
-        TextMeshProUGUI loseText = m_loseText.GetComponent<TextMeshProUGUI>();
-        winText.color = new Color(1f, 0f, 0f);
-        TextMeshProUGUI drawText = m_drawText.GetComponent<TextMeshProUGUI>();
-        winText.color = new Color(1f, 1f, 1f);
+        //Debug.Assert(m_scoreText != null, "Score text is null");
     }
 
     public void Initialize(ServerFacade i_serverFacade)
@@ -81,6 +75,9 @@ public class MashMoleDelegate : MonoBehaviour
         m_bieneInfo = i_bieneInfo;
         m_bienes = i_bienes;
         m_startTime = new DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc).AddMilliseconds(m_bieneInfo.timestamp);
+        //Debug.Log($"---------------------------");
+        //Debug.Log($"Start time is {m_startTime}");
+        //Debug.Log($"---------------------------");
         m_initialized = true;
     }
 
@@ -95,7 +92,7 @@ public class MashMoleDelegate : MonoBehaviour
             TimeSpan timeElapsed = DateTime.Now - m_startTime;
             if(timeElapsed.Seconds > m_bienes.bienes[m_currentBiene].delta)
             {
-                Debug.Log($"NEW biene with id {m_bienes.bienes[m_currentBiene].bieneId}, at position {m_bienes.bienes[m_currentBiene].position}");
+                //Debug.Log($"NEW biene with id {m_bienes.bienes[m_currentBiene].bieneId}, at position {m_bienes.bienes[m_currentBiene].position}");
                 m_moleTimeLeft = m_moleTimeInSeconds;
                 ButtonImage currentButton = m_buttons[m_bienes.bienes[m_currentBiene].position];
                 currentButton.moleImage.enabled = true;
@@ -113,7 +110,7 @@ public class MashMoleDelegate : MonoBehaviour
                 ButtonImage currentButton = m_buttons[m_bienes.bienes[m_currentBiene].position];
                 currentButton.moleImage.enabled = false;
                 currentButton.button.onClick.RemoveListener(OnCurrentBienePressed);
-                Debug.Log($"EXPIRED biene with id {m_bienes.bienes[m_currentBiene].bieneId}");
+                //Debug.Log($"EXPIRED biene with id {m_bienes.bienes[m_currentBiene].bieneId}");
                 m_currentBiene += 1;
                 if (m_currentBiene >= m_bienes.bienes.Length)
                 {
@@ -133,7 +130,7 @@ public class MashMoleDelegate : MonoBehaviour
 
     public void OnCurrentBienePressed()
     {
-        Debug.Log($"CURRENT BIENE PRESSED biene with id {m_bienes.bienes[m_currentBiene].bieneId}");
+        //Debug.Log($"CURRENT BIENE PRESSED biene with id {m_bienes.bienes[m_currentBiene].bieneId}");
         ButtonImage currentButton = m_buttons[m_bienes.bienes[m_currentBiene].position];
         currentButton.moleImage.enabled = false;
         m_isMoleActive = false;

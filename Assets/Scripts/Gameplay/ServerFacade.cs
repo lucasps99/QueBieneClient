@@ -50,7 +50,7 @@ public class ServerFacade : MonoBehaviour
 
         if (request.result == UnityWebRequest.Result.ConnectionError)
         {
-            Debug.Log("Connection Error");
+            //Debug.Log("Connection Error");
             i_callback(ActionResult.Error);
         }
         else
@@ -58,7 +58,7 @@ public class ServerFacade : MonoBehaviour
             // Show results as text
             string text = request.downloadHandler.text;
             JoinRoomResult result = JsonUtility.FromJson<JoinRoomResult>(text);
-            Debug.Log($"Logged in room {result.roomId}");
+            //Debug.Log($"Logged in room {result.roomId}");
             m_roomId = result.roomId;
             i_callback(ActionResult.Success);
         }
@@ -78,13 +78,13 @@ public class ServerFacade : MonoBehaviour
 
         if (request.result == UnityWebRequest.Result.ConnectionError)
         {
-            Debug.Log(request.error);
+            //Debug.Log(request.error);
             i_callback(ActionResult.Error, null);
         }
         else
         {
             string text = request.downloadHandler.text;
-            Debug.Log(text);
+            //Debug.Log(text);
             StartGameInfo result = JsonUtility.FromJson<StartGameInfo>(text);
 
             i_callback(ActionResult.Success, result);
@@ -104,13 +104,13 @@ public class ServerFacade : MonoBehaviour
 
         if (request.result == UnityWebRequest.Result.ConnectionError)
         {
-            Debug.Log(request.error);
+            //Debug.Log(request.error);
             i_callback(ActionResult.Error, null);
         }
         else
         {
             string text = request.downloadHandler.text;
-            Debug.Log(text);
+            //Debug.Log(text);
             Bienes result = JsonUtility.FromJson<Bienes>(text);
 
             i_callback(ActionResult.Success, result);
@@ -133,19 +133,19 @@ public class ServerFacade : MonoBehaviour
         request = SetupHeaders(request);
         request.SetRequestHeader("bieneId", i_bieneId.ToString());
         //request.uploadHandler.contentType = "application/json";
-        Debug.Log($"Room id is {request.GetRequestHeader("roomId")}");
-        Debug.Log($"UserId id is {request.GetRequestHeader("userId")}");
+        //Debug.Log($"Room id is {request.GetRequestHeader("roomId")}");
+        //Debug.Log($"UserId id is {request.GetRequestHeader("userId")}");
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.ConnectionError)
         {
-            Debug.Log(request.error);
+            //Debug.Log(request.error);
             i_callback(ActionResult.Error, null);
         }
         else
         {
             string text = request.downloadHandler.text;
-            Debug.Log(text);
+            //Debug.Log(text);
             OnBienePressedResponse result = JsonUtility.FromJson<OnBienePressedResponse>(text);
 
             i_callback(ActionResult.Success, result);
@@ -166,13 +166,13 @@ public class ServerFacade : MonoBehaviour
 
         if (request.result == UnityWebRequest.Result.ConnectionError)
         {
-            Debug.Log(request.error);
+            //Debug.Log(request.error);
             i_callback(ActionResult.Error, null);
         }
         else
         {
             string text = request.downloadHandler.text;
-            Debug.Log(text);
+            //Debug.Log(text);
             GetResultResponse result = JsonUtility.FromJson<GetResultResponse>(text);
             m_roomId = "";
 
@@ -193,13 +193,13 @@ public class ServerFacade : MonoBehaviour
 
         if (request.result == UnityWebRequest.Result.ConnectionError)
         {
-            Debug.Log(request.error);
+            //Debug.Log(request.error);
             i_callback(ActionResult.Error, null);
         }
         else
         {
             string text = request.downloadHandler.text;
-            Debug.Log(text);
+            //Debug.Log(text);
             GetState result = JsonUtility.FromJson<GetState>(text);
 
             i_callback(ActionResult.Success, result);

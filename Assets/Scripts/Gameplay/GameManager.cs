@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
     bool m_retryCanStartGame = false;
     float m_retryTimeLeft;
     [SerializeField] GameObject m_panel;
-    [SerializeField] Animator m_loadingAnimator;
+    [SerializeField] GameObject m_loadingAnimator;
     [SerializeField] MashMoleDelegate m_mashMoleDelegate;
 
     void Start()
@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
         m_mashMoleDelegate.Initialize(m_serverFacade);
         m_mashMoleDelegate.Reset();
         m_panel.SetActive(true);
-        m_loadingAnimator.enabled = true;
+        m_loadingAnimator.SetActive(true);
     }
 
     void Update()
@@ -63,7 +63,7 @@ public class GameManager : MonoBehaviour
             StartCoroutine(m_serverFacade.GetBienes((i_result, i_bienes) => {
                 m_panel.SetActive(false);
                 m_loadingAnimator.transform.gameObject.SetActive(false);
-                m_loadingAnimator.enabled = false;
+                m_loadingAnimator.SetActive(false);
                 m_mashMoleDelegate.SetGameInfo(i_startGameInfo, i_bienes);
             }));
         }
